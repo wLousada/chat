@@ -33,5 +33,5 @@ fc.append("[mus][key]sidechaincompress=threshold=0.02:ratio=10:attack=60:release
 fc.append(f"[duck][c1][gal]amix=inputs=3:normalize=0,atrim=0:{total},alimiter=limit=0.9[aout]")
 open(os.path.join(S, 'fc.txt'), 'w').write(';\n'.join(fc))
 cmd = ['ffmpeg', '-v', 'error', '-y'] + inputs + ['-filter_complex_script', os.path.join(S, 'fc.txt'), '-map', f'[{last}]', '-map', '[aout]', '-t', f'{total:.3f}',
-       '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '21', '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', os.path.join(S, 'simples.mp4')]
+       '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-profile:v', 'main', '-preset', 'veryfast', '-crf', '21', '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', os.path.join(S, 'simples.mp4')]
 subprocess.run(cmd, check=True); print('total', total)
