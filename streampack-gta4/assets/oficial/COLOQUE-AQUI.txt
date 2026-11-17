@@ -1,0 +1,10 @@
+COLOQUE AQUI AS IMAGENS OFICIAIS DO GTA IV (os nomes precisam ser exatamente estes; .png ou .jpg)
+
+logo.png        -> logo oficial "Grand Theft Auto IV" (PNG com fundo transparente)
+personagem.png  -> arte principal que aparece no quadro grande (ex.: Niko Bellic)
+arte-1.jpg ... arte-6.jpg -> as 6 artes da grade de fundo (estilo da capa do GTA IV)
+
+Fonte oficial: baixe a "Pricedown" (gratuita, Typodermic Fonts) e instale no Windows
+ou coloque o arquivo como assets/fonts/pricedown.ttf
+
+Faltou alguma imagem? O pack mostra um fundo provisório colorido no lugar.

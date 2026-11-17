@@ -82,6 +82,43 @@
     return s;
   }
 
+
+  /* ---------- tema oficial: logo / artes em assets/oficial ---------- */
+  const OF = "../assets/oficial/";
+  const tryImg = (name, cls, fail) => `<img class="${cls || ""}" alt="" src="${OF}${name}.png" onerror="if(!this.dataset.j){this.dataset.j=1;this.src='${OF}${name}.jpg'}else{${fail || "this.remove()"}}">`;
+  const TINTS = ["#3e7f8c", "#c9962f", "#6b7a3a", "#a2412e", "#3f5878", "#6a4a7a"];
+  function coverGrid() {
+    let p = "";
+    for (let i = 1; i <= 6; i++) p += `<div class="pn" style="background:linear-gradient(160deg, ${TINTS[i - 1]}, #000 130%)"><div class="skyline">${skyline(700, 300, 30 + i, { bridge: i % 3 === 0, density: 1.3 })}</div>${tryImg("arte-" + i)}</div>`;
+    return `<div class="cover">${p}</div>`;
+  }
+  function coverBG(shade) {
+    return `${coverGrid()}<div class="layer ${shade}"></div><canvas class="rain" width="${W}" height="${H}"></canvas><div class="layer vignette"></div><div class="layer grain"></div>`;
+  }
+  function logoSlot(h) {
+    return `<div class="logo-slot" style="--lh:${h || 150}px">${tryImg("logo", "", "this.parentNode.classList.add('fb');this.remove()")}<div class="logo-fb"><small>GRAND THEFT AUTO</small><b>IV</b></div></div>`;
+  }
+  function hero(style) {
+    return `<div class="hero in-up d3" style="${style}"><div class="in">${tryImg("personagem", "heroimg", "this.closest('.hero').classList.add('nohero')")}</div></div>`;
+  }
+  // fundo opaco com "buracos" transparentes (para câmera, vídeo, chat)
+  function holedBG(holes, shade) {
+    const imgs = ["linear-gradient(#000,#000)"].concat(holes.map(() => "linear-gradient(#000,#000)")).join(",");
+    const pos = ["0 0"].concat(holes.map((h) => `${h[0]}px ${h[1]}px`)).join(",");
+    const size = ["100% 100%"].concat(holes.map((h) => `${h[2]}px ${h[3]}px`)).join(",");
+    const m = `-webkit-mask-image:${imgs};-webkit-mask-position:${pos};-webkit-mask-size:${size};-webkit-mask-repeat:no-repeat;-webkit-mask-composite:xor;mask-image:${imgs};mask-position:${pos};mask-size:${size};mask-repeat:no-repeat;mask-composite:exclude;`;
+    return `<div class="layer" style="${m}">${coverGrid()}<div class="layer" style="background:rgba(0,0,0,${shade || 0.72})"></div><div class="layer grain"></div></div>`;
+  }
+  function frameHTML(x, y, w, h, label) {
+    return `<div class="cam" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"><div class="hole"></div><i class="br tl"></i><i class="br tr"></i><i class="br bl"></i><i class="br brr"></i>${label ? `<div class="tag" style="left:-6px;top:-70px"><div class="g" style="padding:12px 18px">${label}</div></div>` : ""}</div>`;
+  }
+  function likeMeta(width) {
+    const L = C.metaLike || { atual: 0, total: 1 };
+    const pct = Math.min(100, (L.atual / L.total) * 100).toFixed(1);
+    const n = (x) => Number(x).toLocaleString("pt-BR");
+    return `<div class="likemeta" style="width:${width || 520}px"><div class="thumb"><svg viewBox="0 0 24 24" fill="#000"><path d="M2 21h4V9H2v12zm20-11a2 2 0 0 0-2-2h-6.3l1-4.6v-.3c0-.4-.2-.8-.4-1.1L13.2 1 6.6 7.6C6.2 8 6 8.5 6 9v10a2 2 0 0 0 2 2h9c.8 0 1.5-.5 1.8-1.2l3-7.1c.1-.2.2-.5.2-.7v-2z"/></svg></div><div class="lm"><div class="row"><span>META DE LIKE</span><b>${n(L.atual)}/${n(L.total)}</b></div><div class="bar"><i style="width:${pct}%"></i></div></div></div>`;
+  }
+
   function ambient(skyH, seed) {
     return `<div class="layer sky"></div><div class="layer sun"></div>
       <div class="skyline" style="height:${skyH}px">${skyline(W, skyH, seed)}</div>
@@ -163,21 +200,28 @@
       ? `<div class="clockbox in-l d4"><div class="lbl">${T.lbl}</div><div class="val" id="cd">--:--</div></div>`
       : `<div class="clockbox in-l d4"><div class="lbl">${T.lbl}</div><div class="val small">${esc(C.horarios)}</div></div>`;
     const v = fmt === "v";
-    const titleSize = v ? (T.t.some((l) => l.length > 8) ? 150 : 210) : (T.t.some((l) => l.length > 9) ? 176 : 210);
-    B.innerHTML = `${ambient(v ? 760 : 470, 7)}
+    const tsz = v ? (T.t.some((l) => l.length > 8) ? 140 : 190) : (T.t.some((l) => l.length > 9) ? 150 : 180);
+    B.innerHTML = `${coverBG(v ? "shade-v" : "shade-h")}
       <div class="topbar"><span><span class="dot"></span>${esc(C.slogan)}</span><span>${jogo} • <span class="clk"></span></span></div>
-      <div class="content" style="position:absolute;${v ? "left:0;right:0;top:230px;text-align:center" : "left:120px;top:160px;width:1200px"}">
-        <div class="in-l"><div class="kicker"><span>${T.k}</span></div></div>
-        <div class="in-l d1"><div class="title" style="${v ? "transform-origin:center" : ""}">${lines}</div></div><br>
-        <div class="in-l d3"><div class="plate"><small>${tipo === "offline" || tipo === "encerrada" ? "CANAL" : "AO VIVO COM"}</small><b>${nome}</b></div></div><br>
+      <div class="content" style="position:absolute;${v ? "left:0;right:0;top:200px;text-align:center" : "left:110px;top:100px;width:1100px"}">
+        <div class="in-l">${logoSlot(v ? 140 : 150)}</div><br>
+        <div class="in-l d1"><div class="kicker" style="margin-top:22px"><span>${T.k}</span></div></div>
+        <div class="in-l d2"><div class="title" style="margin-top:14px;${v ? "transform-origin:center" : ""}">${lines}</div></div><br>
+        <div class="in-l d3"><div class="plate" style="margin-top:30px"><small>${tipo === "offline" || tipo === "encerrada" ? "CANAL" : "AO VIVO COM"}</small><b>${nome}</b></div></div><br>
         ${clock}
       </div>
+      ${hero(v ? "left:50%;width:760px;height:560px;margin-left:-380px;top:1150px;transform:rotate(-3deg)" : "right:130px;top:150px;width:620px;height:740px;transform:rotate(4deg)")}
       <div class="phone-wrap in-up d3" style="position:absolute;${v ? "left:50%;top:1020px;width:420px;height:810px;margin-left:-210px;transform:scale(.8) rotate(-3deg);transform-origin:top center" : "right:190px;top:120px;width:420px;height:810px;transform:rotate(5deg)"}">${phone()}</div>
       ${ticker()}`;
-    document.querySelectorAll(".title-line").forEach((e) => (e.style.fontSize = titleSize + "px"));
-    if (v) { // no vertical, o celular sempre fica logo abaixo do bloco de texto
-      const bottom = document.querySelector(".content").getBoundingClientRect().bottom;
-      document.querySelector(".phone-wrap").style.top = Math.max(1000, Math.min(1150, bottom + 50)) + "px";
+    document.querySelectorAll(".title-line").forEach((e) => (e.style.fontSize = tsz + "px"));
+    if (v) { // no vertical, a arte/celular ficam logo abaixo do bloco de texto (recalcula quando o logo carregar)
+      const place = () => {
+        const bottom = document.querySelector(".content").getBoundingClientRect().bottom;
+        const top = Math.max(980, Math.min(1200, bottom + 70));
+        document.querySelector(".phone-wrap").style.top = top + "px";
+        document.querySelector(".hero").style.top = (top + 20) + "px";
+      };
+      place(); window.addEventListener("load", place); setTimeout(place, 600); setTimeout(place, 1500);
     }
     if (hasCount) countdown(document.getElementById("cd"), T.min());
     playMsgs(T.msgs); clocks(); rain(document.querySelector("canvas.rain"));
@@ -224,13 +268,65 @@
       ${camHTML(56, 290, 576, 324, "left:-6px;top:-72px")}
       <div style="position:absolute;left:672px;top:282px;width:360px" class="in-l d2">
         <div class="kicker" style="font-size:24px;letter-spacing:5px"><span>AO VIVO</span></div>
-        <div style="font:400 64px/1 Anton;margin-top:18px;color:var(--cream);text-shadow:5px 5px 0 #000,10px 10px 0 rgba(212,87,42,.85);transform:rotate(-3deg);transform-origin:left">${jogo}</div>
-        <div class="meta" style="width:350px;margin-top:26px"><div class="row"><span>META</span><b>${C.meta.atual}/${C.meta.total}</b></div><div class="bar"><i style="width:${Math.min(100, (C.meta.atual / C.meta.total) * 100)}%"></i></div></div>
+        <div style="margin-top:18px;transform:rotate(-3deg);transform-origin:left">${logoSlot(110)}</div>
+        <div style="margin-top:26px">${likeMeta(360)}</div>
         <div style="margin-top:14px;font:400 26px/1.25 'Special Elite';color:var(--cream);text-shadow:2px 2px 0 #000">horário: <span class="clk"></span></div>
       </div>
       <div class="gameframe" style="top:672px"></div>
       <div class="strip" style="left:0;right:0;top:1300px;height:76px"><span>SEGUE</span><i>${esc(r.tiktok || "")}</i><span>★ TWITCH</span><i>${esc((r.twitch || "").replace(/^twitch\.tv\//, ""))}</i></div>`;
     clocks();
+  }
+
+
+  /* ---------- REACT 16:9 ---------- */
+  function buildReact() {
+    const vid = [40, 100, 1300, 731], cam = [1420, 100, 460, 259];
+    B.innerHTML = `${holedBG([vid, cam])}
+      ${frameHTML(...vid, "REACT")}${camHTML(...cam, "left:-6px;top:-70px")}
+      <div style="position:absolute;left:1420px;top:420px;width:460px" class="in-l">${logoSlot(110)}<div style="margin-top:22px">${liveHUD().replace('class="meta"', 'class="meta" style="width:460px"')}</div><div style="margin-top:16px">${likeMeta(460)}</div></div>
+      <div style="position:absolute;left:40px;top:868px" class="in-l d2"><div class="plate" style="margin-top:0"><small>REAGINDO COM</small><b>${nome}</b></div></div>
+      ${socialToast("left:1420px;top:870px;width:460px")}
+      ${ticker()}`;
+    clocks();
+  }
+
+  /* ---------- CONVERSA (just chatting) 16:9 ---------- */
+  function buildConversa() {
+    const cam = [60, 100, 1260, 709], chat = [1420, 470, 440, 470];
+    B.innerHTML = `${holedBG([cam, chat])}
+      ${camHTML(...cam, "left:-6px;top:-74px").replace('class="cam"', 'class="cam big"')}${frameHTML(...chat, "CHAT")}
+      <div style="position:absolute;left:1420px;top:50px;width:440px" class="in-l">${logoSlot(120)}<div class="kicker" style="margin-top:22px;font-size:28px"><span>SÓ CONVERSA</span></div><div style="margin-top:22px">${liveHUD().replace('class="meta"', 'class="meta" style="width:440px"')}</div></div>
+      <div style="position:absolute;left:60px;top:868px" class="in-l d2"><div class="plate" style="margin-top:0"><small>PAPO COM</small><b>${nome}</b></div></div>
+      ${ticker()}`;
+    clocks();
+  }
+
+  /* ---------- META DE LIKE avulsa ---------- */
+  function buildLike() { B.style.width = "640px"; B.style.height = "160px"; B.innerHTML = `<div style="position:absolute;left:30px;top:30px">${likeMeta(580)}</div>`; }
+
+  /* ---------- TRANSIÇÃO (stinger) — determinística: renderAt(ms) ---------- */
+  function buildTransicao() {
+    const v = fmt === "v", N = v ? 4 : 6;
+    let strips = "";
+    for (let i = 0; i < N; i++) strips += `<div class="st" style="left:${(i / N) * 100 - 6}%;width:${100 / N + 12}%;background:linear-gradient(160deg, ${TINTS[i % 6]}, #000 140%)">${tryImg("arte-" + ((i % 6) + 1))}<div class="layer" style="background:rgba(0,0,0,.35)"></div></div>`;
+    B.innerHTML = `<div class="layer strips">${strips}</div><div class="stlogo">${logoSlot(v ? 220 : 260)}</div>`;
+    const els = [...document.querySelectorAll(".st")], lg = document.querySelector(".stlogo");
+    const ease = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+    const easeIn = (x) => Math.pow(Math.min(1, Math.max(0, x)), 3);
+    window.STINGER = { dur: 1200, ponto: 560 };
+    window.renderAt = function (t) {
+      els.forEach((e, i) => {
+        const dir = i % 2 ? -1 : 1, d = i * 45;
+        const inn = ease((t - d) / 380), out = easeIn((t - 720 - d) / 380);
+        const y = (1 - inn) * 115 * dir + out * -115 * dir;
+        e.style.transform = `skewX(-12deg) translateY(${y}%)`;
+      });
+      const a = ease((t - 300) / 260) * (1 - easeIn((t - 760) / 200));
+      lg.style.opacity = a; lg.style.transform = `translate(-50%,-50%) scale(${0.6 + 0.4 * ease((t - 300) / 260) + 0.25 * easeIn((t - 760) / 200)}) rotate(-4deg)`;
+    };
+    const fixed = q.get("t");
+    if (fixed !== null) window.renderAt(+fixed);
+    else { const t0 = performance.now(); (function f(now) { const t = (now - t0) % 2400; window.renderAt(t); requestAnimationFrame(f); })(t0); }
   }
 
   /* ---------- WEBCAM AVULSA ---------- */
@@ -272,12 +368,11 @@
   /* ---------- BANNER / CAPA (1200x480) ---------- */
   function buildBanner() {
     B.style.width = "1200px"; B.style.height = "480px";
-    B.innerHTML = `<div class="layer sky"></div><div class="layer sun" style="background:radial-gradient(ellipse 50% 70% at 78% 72%, rgba(242,165,65,.6), transparent 70%)"></div>
-      <div class="skyline" style="height:330px">${skyline(1200, 330, 11)}</div><div class="layer fog"></div><div class="layer vignette"></div><div class="layer grain"></div>
-      <div style="position:absolute;left:70px;top:70px">
-        <div class="kicker" style="font-size:26px"><span>${esc(C.slogan)}</span></div>
-        <div style="font:400 150px/.95 Anton;margin-top:18px;color:var(--cream);text-shadow:6px 6px 0 #000,12px 12px 0 rgba(212,87,42,.9);transform:rotate(-3deg);transform-origin:left;white-space:nowrap">${nome}</div>
-        <div class="plate" style="margin-top:30px"><small>LIVES</small><b style="font-size:44px">${esc(C.horarios)}</b></div>
+    B.innerHTML = `${coverGrid()}<div class="layer" style="background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.6) 55%,rgba(0,0,0,.2) 100%)"></div><div class="layer grain"></div>
+      <div style="position:absolute;left:60px;top:44px">
+        ${logoSlot(100)}
+        <div style="font:400 130px/.95 var(--pd);margin-top:14px;color:#fff;text-shadow:var(--outline),10px 10px 0 rgba(0,0,0,.5);transform:rotate(-3deg);transform-origin:left;white-space:nowrap">${nome}</div>
+        <div class="plate" style="margin-top:24px"><small>LIVES</small><b style="font-size:40px">${esc(C.horarios)}</b></div>
       </div>`;
   }
 
@@ -293,7 +388,7 @@
       <div class="stripe"></div><div class="num">#0${idx}</div><div class="t">${esc(P[0])}</div><div class="s">${esc(P[1]).toUpperCase()}</div></div>`;
   }
 
-  const build = { tela: () => buildTela(B.dataset.tipo), overlay: buildOverlay, tiktok: buildTikTok, webcam: buildWebcam, alerta: buildAlerta, banner: buildBanner, painel: buildPainel }[cena];
+  const build = { tela: () => buildTela(B.dataset.tipo), overlay: buildOverlay, tiktok: buildTikTok, webcam: buildWebcam, alerta: buildAlerta, banner: buildBanner, painel: buildPainel, react: buildReact, conversa: buildConversa, like: buildLike, transicao: buildTransicao }[cena];
   if (document.fonts && document.fonts.load) {
     Promise.all(["400 20px Anton", "600 20px 'Barlow C'", "800 20px 'Barlow C'", "20px 'Special Elite'", "700 20px Oswald"].map((f) => document.fonts.load(f))).finally(build);
   } else build();

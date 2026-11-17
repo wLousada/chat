@@ -176,3 +176,68 @@ canvas.rain { position: absolute; inset: 0; opacity: .35; }
 .in-up { opacity: 0; animation: inup .9s cubic-bezier(.2,1,.3,1) forwards; }
 @keyframes inup { from { opacity: 0; translate: 0 70px; } to { opacity: 1; translate: 0 0; } }
 .d1 { animation-delay: .15s } .d2 { animation-delay: .35s } .d3 { animation-delay: .55s } .d4 { animation-delay: .75s } .d5 { animation-delay: .95s }
+
+/* =====================================================================
+   TEMA OFICIAL GTA IV — fonte Pricedown + logo/artes oficiais (assets/oficial)
+   ===================================================================== */
+@font-face { font-family: "Pricedown"; src: local("Pricedown"), local("Pricedown Bl"), local("Pricedown Black"), url(fonts/pricedown.ttf) format("truetype"), url(fonts/pricedown.otf) format("opentype"); }
+:root {
+  --night: #000; --ink: #000; --cream: #ffffff; --steel: #b9b9b9;
+  --amber: #e3b23c;   /* mostarda das telas de loading */
+  --rust: #b5452f;    /* vermelho tijolo */
+  --teal: #3e7f8c; --olive: #6b7a3a; --navy: #3f5878; --plum: #6a4a7a;
+  --pd: "Pricedown", "Anton", sans-serif;
+  --outline: -5px -5px 0 #000, 5px -5px 0 #000, -5px 5px 0 #000, 5px 5px 0 #000, 0 -6px 0 #000, 0 6px 0 #000, -6px 0 0 #000, 6px 0 0 #000;
+}
+.title-line, .plate b, .cam .tag .n, .toast b, .alert .nm, .panel .t { font-family: var(--pd) !important; }
+.title-line { color: #fff; text-shadow: var(--outline), 12px 12px 0 rgba(0,0,0,.55); letter-spacing: 2px; }
+.title-line.accent { color: var(--amber); }
+.panel .t { text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000, 6px 6px 0 rgba(0,0,0,.5); }
+.alert .nm { text-shadow: -4px -4px 0 #000, 4px -4px 0 #000, -4px 4px 0 #000, 4px 4px 0 #000; }
+.plate { border-left-color: var(--amber); background: rgba(0,0,0,.85); }
+
+/* capa em grade (estilo da capa do GTA IV) */
+.cover { position: absolute; inset: 0; background: #000; display: grid; gap: 12px; padding: 0; }
+body.h .cover { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); }
+body.v .cover { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); }
+.cover .pn { position: relative; overflow: hidden; }
+.cover .pn .skyline { height: 70%; opacity: .5; }
+.cover .pn img, .heroimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cover .pn::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(0,0,0,.35) 1.3px, transparent 1.7px); background-size: 9px 9px; mix-blend-mode: multiply; }
+.shade-h { background: linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.78) 45%, rgba(0,0,0,.25) 75%, rgba(0,0,0,.45) 100%); }
+.shade-v { background: linear-gradient(180deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,.88) 18%, rgba(0,0,0,.82) 52%, rgba(0,0,0,.25) 75%, rgba(0,0,0,.7) 100%); }
+
+/* logo oficial */
+.logo-slot { display: inline-block; }
+.logo-slot img { display: block; max-height: 170px; max-width: 520px; filter: drop-shadow(6px 6px 0 rgba(0,0,0,.6)); }
+.logo-fb { display: none; font-family: var(--pd); color: #fff; line-height: .82; text-shadow: var(--outline); text-align: left; }
+.logo-fb small { display: block; font-size: 44px; letter-spacing: 1px; }
+.logo-fb b { display: block; font-size: 120px; font-weight: 400; }
+.logo-slot.fb .logo-fb { display: inline-block; }
+
+/* arte principal (personagem) em quadro inclinado */
+.hero { position: absolute; background: #000; padding: 12px; box-shadow: 0 0 0 4px #fff, 0 0 0 10px #000, 20px 24px 0 rgba(0,0,0,.55); }
+.hero .in { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.hero.nohero { display: none; }
+.phone-wrap { display: none; }
+.hero.nohero ~ .phone-wrap { display: block; }
+.logo-slot img { max-height: var(--lh, 150px); }
+.logo-fb small { font-size: calc(var(--lh, 150px) * .26); }
+.logo-fb b { font-size: calc(var(--lh, 150px) * .78); }
+body.v .content .logo-fb { text-align: center; }
+.cam .hole { box-shadow: 0 0 0 5px var(--amber), 0 0 0 15px #000, 0 0 0 17px rgba(255,255,255,.4), 0 0 40px 18px rgba(227,178,60,.35), 0 22px 50px 10px rgba(0,0,0,.55); }
+.likemeta { display: flex; align-items: stretch; background: rgba(0,0,0,.88); box-shadow: 0 0 26px rgba(227,178,60,.45), 7px 7px 0 rgba(0,0,0,.6); border: 3px solid var(--amber); }
+.likemeta .thumb { width: 86px; background: var(--amber); display: grid; place-items: center; }
+.likemeta .thumb svg { width: 48px; height: 48px; animation: thumb 1.6s infinite; }
+@keyframes thumb { 0%,70%,100% { transform: none } 80% { transform: rotate(-14deg) scale(1.15) } 90% { transform: rotate(6deg) } }
+.likemeta .lm { flex: 1; padding: 12px 16px 14px; }
+.likemeta .row { white-space: nowrap; gap: 12px; display: flex; justify-content: space-between; align-items: baseline; font: 800 22px/1 "Barlow C"; letter-spacing: 4px; color: var(--steel); }
+.likemeta .row b { font: 400 30px/1 var(--pd); color: #fff; letter-spacing: 1px; }
+.likemeta .bar { margin-top: 10px; height: 14px; background: #2a2a2a; position: relative; overflow: hidden; }
+.likemeta .bar i { position: absolute; inset: 0 auto 0 0; background: repeating-linear-gradient(-45deg, var(--amber) 0 14px, #c9962f 14px 28px); background-size: 40px 40px; animation: bars 1.2s linear infinite; }
+.strips { overflow: hidden; }
+.st { position: absolute; top: -10%; height: 120%; overflow: hidden; border-left: 10px solid #000; border-right: 10px solid #000; transform: translateY(120%); }
+.st img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: skewX(12deg) scale(1.3); }
+.stlogo { position: absolute; left: 50%; top: 50%; opacity: 0; transform: translate(-50%,-50%); }
+.stlogo .logo-fb { text-align: center; }
+.likemeta .row span { font-size: 19px; letter-spacing: 3px; }

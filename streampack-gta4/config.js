@@ -25,6 +25,9 @@ window.PACK_CONFIG = {
   // Barra de meta no overlay
   meta: { texto: "META DE SEGUIDORES", atual: 320, total: 500 },
 
+  // Meta de like (TikTok)
+  metaLike: { atual: 2342, total: 3500 },
+
   // Chave PIX / link de apoio (painel "Apoie")
   apoio: "PIX: seuemail@exemplo.com",
 
