@@ -123,6 +123,71 @@
     runClocks();
   }
 
+
+  /* ---------- TELAS 3D (personagem principal + palco com profundidade) ---------- */
+  function extrudeText(txt, size, depth) {
+    let s = "";
+    for (let i = depth; i >= 1; i--) s += `<span class="l${i === 1 ? " d1st" : ""}" style="transform:translate3d(${(i * 0.85).toFixed(1)}px,${(i * 1.1).toFixed(1)}px,${-i * 3}px)">${txt}</span>`;
+    return `<div class="ex t3d" style="display:inline-block;font-size:${size}px">${s}<span class="l face">${txt}</span><span class="shine">${txt}</span></div>`;
+  }
+  function extrudeImg(src, h, depth) {
+    let s = "";
+    for (let i = depth; i >= 1; i--) s += `<img class="l" src="${src}" style="height:${h}px;transform:translate3d(${(i * 1.1).toFixed(1)}px,${(i * 1.1).toFixed(1)}px,${(-i * 2.6).toFixed(1)}px)" alt="">`;
+    return `<div class="ex" style="display:inline-block">${s}<img class="l face" src="${src}" style="height:${h}px" alt=""></div>`;
+  }
+  function coin(size) {
+    const ini = (C.nome || "SN").trim().split(/\s+/).map((w) => w[0]).join("").slice(0, 3).toUpperCase();
+    const id = "cn" + Math.random().toString(36).slice(2, 7);
+    const ring = `<svg viewBox="0 0 200 200"><defs><path id="${id}" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/></defs><text font-family="Barlow C" font-weight="800" font-size="17" letter-spacing="3" fill="#fff"><textPath href="#${id}">★ ${nome} ★ AO VIVO ★ LEONIDA ★</textPath></text></svg>`;
+    let edge = ""; for (let i = -6; i <= 6; i += 2) edge += `<div class="edge" style="transform:translateZ(${i}px)"></div>`;
+    return `<div class="coin" style="width:${size}px;height:${size}px">${edge}<div class="face" style="transform:translateZ(7px)">${ring}<img class="vi" src="${OF}logo-vi.webp" alt=""></div><div class="face back" style="transform:rotateY(180deg) translateZ(7px)">${ring}<div class="ini" style="font-size:${(size * 0.34).toFixed(0)}px">${esc(ini)}</div></div></div>`;
+  }
+  function sparks(n) {
+    let s = "";
+    for (let i = 0; i < n; i++) {
+      const sz = 4 + Math.random() * 12;
+      s += `<i class="spark" style="left:${(Math.random() * W).toFixed(0)}px;top:${H + 20}px;width:${sz.toFixed(0)}px;height:${sz.toFixed(0)}px;--z:${(Math.random() * 600 - 300).toFixed(0)}px;--dx:${(Math.random() * 400 - 200).toFixed(0)}px;--s:${(0.6 + Math.random()).toFixed(2)};animation-duration:${(7 + Math.random() * 9).toFixed(1)}s;animation-delay:-${(Math.random() * 14).toFixed(1)}s"></i>`;
+    }
+    return s;
+  }
+  function heroHTML(personagem, left, top, h) {
+    const src = `${OF}char-${personagem}.webp`;
+    return `<div class="z" style="left:${left}px;top:${top}px;height:${h}px;transform:translateZ(90px)"><div class="hero3d" style="position:relative;height:${h}px">
+      <img class="ch" src="${src}" alt=""><div class="rim" style="-webkit-mask-image:url(${src});mask-image:url(${src})"></div></div></div>`;
+  }
+  const TELAS3D = { inicio: "jasonlucia-1", pausa: "jasonlucia-3", fim: "jasonlucia-2", offline: "jasonlucia-1" };
+  function buildTela3d(tipo) {
+    const T = TELAS[tipo], per = ((C.telas3d || {})[tipo]) || TELAS3D[tipo];
+    const clock = T.min ? `<div class="timer"><div class="lbl">${T.lbl}</div><div class="val" id="cd">--:--</div></div>`
+      : `<div class="timer"><div class="lbl">${T.lbl}</div><div class="val small">${esc(C.horarios)}</div></div>`;
+    const tsize = v ? 170 : 190;
+    const titleBlock = `<div style="${v ? "text-align:center" : ""}">
+        <div style="${v ? "display:flex;justify-content:center" : ""}">${logo(v ? 170 : 180)}</div>
+        <div class="sub3d" style="margin-top:22px">${T.k}</div>
+        <div class="tbox" style="margin-top:12px;transform-style:preserve-3d">${extrudeText(T.t, tsize, 16)}</div>
+        <div class="neon" style="font-size:${v ? 62 : 66}px;margin-top:4px">${T.neon}</div>
+        <div style="margin-top:20px"><div class="plate"><small>COM</small><b>${nome}</b></div></div>
+        <div style="margin-top:24px">${clock}</div></div>`;
+    const hH = v ? 1020 : 900;
+    B.innerHTML = `<div class="world"><div class="stage">
+      <div class="deep-sky"></div><div class="rays"></div>
+      <div class="z" style="${v ? "left:190px;top:700px" : "left:1020px;top:110px"};transform:translateZ(-480px)"><div class="sun3d" style="width:${v ? 700 : 760}px;height:${v ? 700 : 760}px"></div></div>
+      <div class="z" style="left:0;top:${v ? 1400 : 830}px;width:${W}px;transform:translateZ(-220px)"><div class="grid-floor" style="top:0"></div></div>
+      <div class="z" style="${v ? "left:200px;top:880px" : "left:960px;top:130px"};transform:translateZ(-170px) rotateY(${v ? 0 : -14}deg)">${extrudeImg(OF + "logo-vi.webp", v ? 520 : 620, 24)}</div>
+      <div class="floor-shadow" style="${v ? "left:200px;top:1800px;width:680px" : "left:1110px;top:985px;width:640px"};height:90px;transform:translateZ(70px)"></div>
+      ${v ? heroHTML(per, 175, 1920 - 70 - hH + 20, hH) : heroHTML(per, 1140, 1080 - 70 - hH + 30, hH)}
+      <div class="z" style="${v ? "left:0;right:0;top:120px" : "left:110px;top:120px"};transform:translateZ(${v ? 30 : 40}px) rotateY(${v ? 0 : 8}deg)">${titleBlock}</div>
+      <div class="z" style="${v ? "left:860px;top:150px" : "left:650px;top:740px"};transform:translateZ(${v ? 60 : 80}px)">${coin(v ? 140 : 170)}</div>
+      ${sparks(v ? 30 : 36)}
+    </div></div>
+    <div class="layer halftone3d"></div><div class="layer paper"></div><div class="layer scan"></div><div class="layer vignette"></div><div class="layer grain"></div>
+    ${topbar()}${corners()}${ticker()}<div class="flash-in"></div>`;
+    const face = document.querySelector(".t3d .face"), max = v ? 980 : 860;
+    if (face && face.offsetWidth > max) document.querySelector(".t3d").style.fontSize = (tsize * max / face.offsetWidth).toFixed(0) + "px";
+    if (T.min) countdown(document.getElementById("cd"), T.min());
+    runClocks();
+  }
+
   /* ---------- molduras ---------- */
   function neonFrame(x, y, w, h, label, opts) {
     opts = opts || {};
@@ -296,7 +361,7 @@
     const t = document.querySelector(".panel .t"); if (t.scrollWidth > 270) t.style.fontSize = (62 * 270 / t.scrollWidth).toFixed(0) + "px";
   }
 
-  const build = { tela: () => buildTela(B.dataset.tipo), overlay: buildOverlay, tiktok: buildTikTok, webcam: buildWebcam, react: buildReact, conversa: buildConversa, like: buildLike, alerta: buildAlerta, chat: buildChat, transicao: buildTransicao, banner: buildBanner, painel: buildPainel }[cena];
+  const build = { tela: () => buildTela(B.dataset.tipo), tela3d: () => buildTela3d(B.dataset.tipo), overlay: buildOverlay, tiktok: buildTikTok, webcam: buildWebcam, react: buildReact, conversa: buildConversa, like: buildLike, alerta: buildAlerta, chat: buildChat, transicao: buildTransicao, banner: buildBanner, painel: buildPainel }[cena];
   const fonts = ["400 20px Pricedown", "400 20px Anton", "600 20px 'Barlow C'", "800 20px 'Barlow C'", "20px Yellowtail", "700 20px Oswald"];
   (document.fonts ? Promise.all(fonts.map((f) => document.fonts.load(f))).catch(() => {}) : Promise.resolve()).finally(build);
 })();

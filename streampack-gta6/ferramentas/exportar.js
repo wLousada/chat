@@ -10,6 +10,10 @@ const url = (f, qs = "") => "file://" + path.join(ROOT, "cenas", f) + (qs ? "?" 
 
 const JOBS = [
   ["01-iniciando.html", 1920, 1080, "telas/01-iniciando-1920x1080.png"],
+  ["postal-01-iniciando.html", 1920, 1080, "telas-postal/01-iniciando-1920x1080.png"],
+  ["postal-01-iniciando-VERTICAL.html", 1080, 1920, "telas-postal/01-iniciando-1080x1920.png"],
+  ["postal-02-pausada.html", 1920, 1080, "telas-postal/02-pausada-1920x1080.png"],
+  ["postal-03-finalizou.html", 1920, 1080, "telas-postal/03-finalizou-1920x1080.png"],
   ["01-iniciando-VERTICAL.html", 1080, 1920, "telas/01-iniciando-1080x1920.png"],
   ["02-pausada.html", 1920, 1080, "telas/02-pausada-1920x1080.png"],
   ["02-pausada-VERTICAL.html", 1080, 1920, "telas/02-pausada-1080x1920.png"],
@@ -36,7 +40,7 @@ const JOBS = [
   for (const [file, w, h, out, transparent, qs] of JOBS) {
     const page = await browser.newPage({ viewport: { width: w, height: h } });
     await page.goto(url(file, qs));
-    await page.waitForTimeout(/^0[1-4]|09|11|12/.test(file) ? 6000 : 3000);
+    await page.waitForTimeout(/^(postal-)?0[1-4]|09|11|12/.test(file) ? 6000 : 3000);
     const dest = path.join(OUT, out);
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     await page.screenshot({ path: dest, omitBackground: !!transparent });
@@ -62,6 +66,23 @@ const JOBS = [
     fs.copyFileSync(path.join(tmp, "f0019.png"), dest.replace(".webm", "-previa.png"));
     fs.rmSync(tmp, { recursive: true });
     console.log("ok", "transicao/" + name + ".webm");
+  }
+  // vídeos MP4 das telas 3D animadas (12 s cada)
+  for (const [file, w, h, name] of [["01-iniciando.html", 1920, 1080, "iniciando-1920x1080"], ["01-iniciando-VERTICAL.html", 1080, 1920, "iniciando-1080x1920"],
+    ["02-pausada.html", 1920, 1080, "pausada-1920x1080"], ["02-pausada-VERTICAL.html", 1080, 1920, "pausada-1080x1920"],
+    ["03-finalizou.html", 1920, 1080, "finalizou-1920x1080"], ["03-finalizou-VERTICAL.html", 1080, 1920, "finalizou-1080x1920"]]) {
+    const tmp = fs.mkdtempSync(path.join(require("os").tmpdir(), "rec-"));
+    const ctx = await browser.newContext({ viewport: { width: w, height: h }, recordVideo: { dir: tmp, size: { width: w, height: h } } });
+    const page = await ctx.newPage();
+    await page.goto(url(file));
+    await page.waitForTimeout(13200);
+    const raw = await page.video().path();
+    await ctx.close();
+    const dest = path.join(OUT, "videos", name + ".mp4");
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    execFileSync("ffmpeg", ["-y", "-v", "error", "-ss", "1.0", "-i", raw, "-t", "12", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", "medium", "-crf", "20", "-r", "30", "-movflags", "+faststart", dest]);
+    fs.rmSync(tmp, { recursive: true });
+    console.log("ok", "videos/" + name + ".mp4");
   }
   await browser.close();
 })();

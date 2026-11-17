@@ -32,6 +32,9 @@ window.PACK_CONFIG = {
     offline:   { postal: "grassrivers",  cena: "cena-5", personagem: "drequan" },
   },
 
+  // Telas 3D: personagem principal de cada uma (jasonlucia-1, jasonlucia-2, jasonlucia-3 ou outro personagem)
+  telas3d: { inicio: "jasonlucia-1", pausa: "jasonlucia-3", fim: "jasonlucia-2", offline: "jasonlucia-1" },
+
   // Frases da faixa de notícias
   ticker: [
     "AO VIVO DIRETO DE LEONIDA",

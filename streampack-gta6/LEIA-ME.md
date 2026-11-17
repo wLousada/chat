@@ -10,6 +10,20 @@ e a imagem tem cara de câmera VHS (REC, timecode, cantos de câmera), como os v
 Todo o material visual é oficial da Rockstar (rockstargames.com/VI): logo GTA VI, personagens (Boobie, Brian, Cal, Dre'Quan,
 Raul, Real Dimez, Jason e Lucia), cenários e postais.
 
+## ★ Versão 3D (telas principais)
+As telas **Iniciando, Pausada, Finalizou e Offline** agora são 3D animadas, com **Jason e Lucia** (os protagonistas) como personagens principais:
+- Palco com perspectiva que balança devagar e entra voando no começo
+- **Logo VI extrudado de verdade** (camadas em profundidade) atrás dos personagens
+- Letreiro 3D com degradê do VI, brilho passando e falha de VHS (glitch)
+- Contorno de luz neon rosa e ciano nos personagens, sombra forte e um brilho passando por eles
+- Raios de sol girando, sol listrado retrô, chão neon em movimento e partículas subindo
+- Texturas: retícula de quadrinho, papel, linhas de TV e granulado
+- **Emblema do canal**: uma moeda 3D girando com o nome do canal de um lado e as iniciais do outro
+
+Vídeos MP4 prontos (12 s, 16:9 e 9:16) em `exports/videos/`: dá pra usar no OBS como fonte de mídia em loop ou postar no TikTok.
+A versão anterior (postais) continua em `cenas/postal-*.html`.
+No `config.js`, em `telas3d`, você escolhe o personagem de cada tela.
+
 ## 0. Instale a fonte (1 minuto)
 Baixe grátis a **Pricedown** em dafont.com/pricedown.font, abra `Pricedown Bl.otf` e clique em **Instalar**.
 A licença não permite mandar a fonte junto. Sem ela, as cenas animadas usam uma fonte parecida.
