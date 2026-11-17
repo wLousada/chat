@@ -3,15 +3,13 @@
 Stream pack animado para lives de GTA IV na **Twitch (16:9)** e no **TikTok (9:16)**, no visual oficial do jogo:
 fundo em grade de artes (como a capa do GTA IV), fonte Pricedown branca com contorno preto, logo oficial e cores das telas de loading (mostarda, verde-azulado, oliva, tijolo, azul aço e ameixa).
 
-## 0. COLOQUE AS ARTES OFICIAIS (obrigatório para o visual oficial)
-O pack já está montado para receber o material oficial. Coloque os arquivos em `assets/oficial/` com estes nomes:
+## 0. ARTES OFICIAIS + FONTE
+As artes oficiais (capa do GTA IV do site da Rockstar) já vêm em `assets/oficial/`. Para trocar alguma, salve com o mesmo nome:
 - `logo.png`: logo "Grand Theft Auto IV" (fundo transparente)
 - `personagem.png`: arte principal no quadro grande (ex.: Niko Bellic)
 - `arte-1.jpg` até `arte-6.jpg`: as 6 artes da grade de fundo e da transição (pode ser .png também)
-- Fonte **Pricedown**: instale no Windows ou salve como `assets/fonts/pricedown.ttf`
+- **INSTALE A FONTE Pricedown** (grátis em dafont.com/pricedown.font → abrir `Pricedown Bl.otf` → Instalar). Sem ela as cenas animadas usam uma fonte parecida. Os PNGs e vídeos em `exports/` já estão com a Pricedown.
 
-Onde achar: artworks oficiais no site da Rockstar (rockstargames.com/IV) e em wikis de GTA. A fonte Pricedown é gratuita (Typodermic).
-Enquanto as imagens não estiverem na pasta, as cenas mostram um fundo provisório colorido e o logo em texto.
 Depois de colocar as imagens, as cenas no OBS atualizam sozinhas. Para gerar os PNGs/vídeos de novo: `node ferramentas/exportar.js`.
 
 ## 1. Coloque seu nome (uma vez só)

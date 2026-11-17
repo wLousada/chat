@@ -210,7 +210,7 @@
         <div class="in-l d3"><div class="plate" style="margin-top:30px"><small>${tipo === "offline" || tipo === "encerrada" ? "CANAL" : "AO VIVO COM"}</small><b>${nome}</b></div></div><br>
         ${clock}
       </div>
-      ${hero(v ? "left:50%;width:760px;height:560px;margin-left:-380px;top:1150px;transform:rotate(-3deg)" : "right:130px;top:150px;width:620px;height:740px;transform:rotate(4deg)")}
+      ${hero(v ? "left:50%;width:560px;height:680px;margin-left:-280px;top:1150px;transform:rotate(-3deg)" : "right:130px;top:150px;width:620px;height:740px;transform:rotate(4deg)")}
       <div class="phone-wrap in-up d3" style="position:absolute;${v ? "left:50%;top:1020px;width:420px;height:810px;margin-left:-210px;transform:scale(.8) rotate(-3deg);transform-origin:top center" : "right:190px;top:120px;width:420px;height:810px;transform:rotate(5deg)"}">${phone()}</div>
       ${ticker()}`;
     document.querySelectorAll(".title-line").forEach((e) => (e.style.fontSize = tsz + "px"));
