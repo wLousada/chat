@@ -1,6 +1,6 @@
-# artes oficiais da Rockstar e exports com elas: só no .zip local, fora do repositório
-streampack-gta4/assets/oficial/*.jpg
-streampack-gta4/assets/oficial/*.png
-streampack-gta4/exports/
-streampack-gta4.zip
-streampack-gta4/assets/fonts/pricedown.*
+# artes oficiais da Rockstar e exports com elas: só no .zip, fora do repositório
+streampack-gta6/assets/oficial/*.webp
+streampack-gta6/assets/oficial/*.jpg
+streampack-gta6/exports/
+streampack-gta6/assets/fonts/pricedown.*
+*.zip
